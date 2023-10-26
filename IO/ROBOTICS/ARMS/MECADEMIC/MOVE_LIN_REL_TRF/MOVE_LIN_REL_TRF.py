@@ -4,7 +4,7 @@ from PYTHON.utils.mecademic_state.mecademic_state import query_for_handle
 
 
 @flojoy(deps={"mecademicpy": "1.4.0"})
-def MOVE_LIN(
+def MOVE_LIN_REL_TRF(
     ip_address: TextBlob,
     x: float,
     y: float,

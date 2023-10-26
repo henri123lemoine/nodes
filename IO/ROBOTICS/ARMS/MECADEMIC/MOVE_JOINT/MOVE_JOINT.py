@@ -1,8 +1,10 @@
 from flojoy import flojoy, TextBlob
 from typing import Optional
 from PYTHON.utils.mecademic_state.mecademic_state import query_for_handle
+from PYTHON.utils.mecademic_state.mecademic_helpers import safe_robot_operation
 
 
+@safe_robot_operation
 @flojoy(deps={"mecademicpy": "1.4.0"})
 def MOVE_JOINT(
     ip_address: TextBlob,

@@ -1,8 +1,10 @@
-from flojoy import flojoy, TextBlob
 from typing import Optional
+from flojoy import flojoy, TextBlob
 from PYTHON.utils.mecademic_state.mecademic_state import query_for_handle
+from PYTHON.utils.mecademic_state.mecademic_helpers import safe_robot_operation
 
 
+@safe_robot_operation
 @flojoy(deps={"mecademicpy": "1.4.0"})
 def SET_TRF(ip_address: TextBlob, rf_x: Optional[float] = 0.0, rf_y: Optional[float] = 0.0, rf_z: Optional[float] = 0.0, rf_a: Optional[float] = 0.0, rf_b: Optional[float] = 0.0, rf_g: Optional[float] = 0.0) -> TextBlob:
     """

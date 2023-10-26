@@ -1,9 +1,10 @@
 from flojoy import flojoy, TextBlob, DataFrame
-
 from PYTHON.utils.mecademic_state.mecademic_calculations import calculateLimitingMaxVel
 from PYTHON.utils.mecademic_state.mecademic_state import query_for_handle
+from PYTHON.utils.mecademic_state.mecademic_helpers import safe_robot_operation
 
 
+@safe_robot_operation
 @flojoy(deps={"mecademicpy": "1.4.0"})
 def MOVE_KEYFRAMES_LIN(
         ip_address: TextBlob,
@@ -35,21 +36,24 @@ def MOVE_KEYFRAMES_LIN(
     """
     robot = query_for_handle(ip_address)
 
-
     # Data validation
     required_columns = ["x", "y", "z", "alpha", "beta", "gamma", "duration"]
     for column in required_columns:
         if column not in keyframes.columns:
-            raise ValueError(f"Keyframes dataframe must have a {column} column")
+            raise ValueError(
+                f"Keyframes dataframe must have a {column} column")
     # check that all values are numeric
     for column in keyframes.columns:
         if keyframes[column].dtype != "float64":
-            raise ValueError(f"Keyframes dataframe column {column} must be numeric")
+            raise ValueError(
+                f"Keyframes dataframe column {column} must be numeric")
 
     # Move execution
     for index, row in keyframes.iterrows():
-        vel = calculateLimitingMaxVel(robot.GetJoints(), [row["x"], row["y"], row["z"], row["alpha"], row["beta"], row["gamma"]], row["duration"])
+        vel = calculateLimitingMaxVel(robot.GetJoints(), [
+                                      row["x"], row["y"], row["z"], row["alpha"], row["beta"], row["gamma"]], row["duration"])
         robot.SetJointVel(vel)
-        robot.MoveLinRelTRF(row["x"], row["y"], row["z"], row["alpha"], row["beta"], row["gamma"])
+        robot.MoveLinRelTRF(row["x"], row["y"], row["z"],
+                            row["alpha"], row["beta"], row["gamma"])
         robot.WaitIdle(row["duration"])
     return ip_address

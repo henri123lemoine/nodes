@@ -1,12 +1,8 @@
-import logging
 from typing import Optional
 from flojoy import flojoy, TextBlob
-from PYTHON.utils.mecademic_state.mecademic_calculations import getCirclePositions
+from PYTHON.utils.mecademic_state.mecademic_calculations import get_circle_positions
 from PYTHON.utils.mecademic_state.mecademic_state import query_for_handle
 from PYTHON.utils.mecademic_state.mecademic_helpers import safe_robot_operation
-
-
-logger = logging.getLogger(__name__)
 
 
 @safe_robot_operation
@@ -39,16 +35,12 @@ def MOVE_CIRCLE(
     """
     robot = query_for_handle(ip_address)
 
-    center_X, center_Y, center_Z, alpha, beta, gamma = robot.GetPose()
-    logger.info(
-        f"{center_X = }, {center_Y = }, {center_Z = }, {beta = }, {gamma = }")
+    X, Y, Z, alpha, beta, gamma = robot.GetPose()
 
-    positions = getCirclePositions(
-        radius, revolutions, center_X, center_Y, center_Z)
+    positions = get_circle_positions(radius, revolutions, (X, Y, Z))
     for position in positions:
-        robot.MoveLin(x=position[0], y=position[1],
-                      z=position[2], alpha=alpha, beta=beta, gamma=gamma)
-    robot.MoveLin(x=center_X, y=center_Y, z=center_Z,
-                  alpha=alpha, beta=beta, gamma=gamma)
+        robot.MoveLin(x=position[0], y=position[1], z=position[2],
+                      alpha=alpha, beta=beta, gamma=gamma)
+    robot.MoveLin(x=X, y=Y, z=Z, alpha=alpha, beta=beta, gamma=gamma)
 
     return ip_address
